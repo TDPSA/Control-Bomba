@@ -30,7 +30,7 @@
       background-color: green;
       color: white;
     }
-    .vacio {
+    .bajo {
       background-color: red;
       color: white;
     }
@@ -63,7 +63,7 @@
       <tr>
         <th>Sensor</th>
         <th>Último registro</th>
-        <th>Estado</th>
+        <th>Nivel</th>
       </tr>
     </thead>
     <tbody id="sensorData">
@@ -89,7 +89,7 @@
         sensor1Row.innerHTML = `
           <td>Pivote 1</td>
           <td>${data.sensor1.timestamp}</td>
-          <td class="${data.sensor1.state === 'Lleno' ? 'lleno' : 'vacio'}">${data.sensor1.state}</td>
+          <td class="${data.sensor1.state === 'Lleno' ? 'lleno' : 'bajo'}">${data.sensor1.state === 'Lleno' ? 'Lleno' : 'Bajo'}</td>
         `;
         tableBody.appendChild(sensor1Row);
 
@@ -97,7 +97,7 @@
         sensor2Row.innerHTML = `
           <td>Pivote 2</td>
           <td>${data.sensor2.timestamp}</td>
-          <td class="${data.sensor2.state === 'Lleno' ? 'lleno' : 'vacio'}">${data.sensor2.state}</td>
+          <td class="${data.sensor2.state === 'Lleno' ? 'lleno' : 'bajo'}">${data.sensor2.state === 'Lleno' ? 'Lleno' : 'Bajo'}</td>
         `;
         tableBody.appendChild(sensor2Row);
       } catch (error) {
