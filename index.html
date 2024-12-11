@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nivel tanques de agua</title>
+  <link rel="icon" href="path/to/your/favicon.ico" type="image/x-icon"> <!-- Favicon -->
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -35,10 +36,26 @@
       padding: 10px 20px;
       font-size: 16px;
     }
+    .loader {
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 60px;
+      height: 60px;
+      animation: spin 2s linear infinite;
+      display: none;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
   <h1>Nivel tanques de agua</h1>
+  <img src="path/to/your/logo.ico" alt="Logo" style="width: 100px; height: 100px;"> <!-- Logo inicial -->
+  <div class="loader" id="loader"></div>
   <table>
     <thead>
       <tr>
@@ -56,6 +73,9 @@
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwBFTYrAGh0opskupEhCs8sKP4Ilt73u3BYTOdQnAD3YkpDjL_sUbG9CYJHhZbfOsln/exec';
 
     async function fetchSensorData() {
+      const loader = document.getElementById('loader');
+      loader.style.display = 'block'; // Mostrar el círculo de carga
+
       try {
         const response = await fetch(scriptURL);
         const data = await response.json();
@@ -79,6 +99,8 @@
         tableBody.appendChild(sensor2Row);
       } catch (error) {
         console.error('Error fetching sensor data:', error);
+      } finally {
+        loader.style.display = 'none'; // Ocultar el círculo de carga
       }
     }
 
