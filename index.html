@@ -10,15 +10,18 @@
       font-family: Arial, sans-serif;
       text-align: center;
       margin-top: 50px;
+      padding: 0 10px;
     }
     table {
       margin: 0 auto;
       border-collapse: collapse;
-      width: 50%;
+      width: 100%;
+      max-width: 600px;
     }
     th, td {
       border: 1px solid #ddd;
       padding: 8px;
+      word-wrap: break-word;
     }
     th {
       background-color: #f2f2f2;
@@ -55,7 +58,6 @@
 <body>
   <img src="favicon.ico" alt="Logo" style="width: 100px; height: 100px;"> <!-- Logo inicial -->
   <h1>Nivel tanques de agua</h1>
-  <div class="loader" id="loader"></div>
   <table>
     <thead>
       <tr>
@@ -68,6 +70,7 @@
     </tbody>
   </table>
   <button onclick="fetchSensorData()">Actualizar Datos</button>
+  <div class="loader" id="loader"></div> <!-- Círculo de carga -->
 
   <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwBFTYrAGh0opskupEhCs8sKP4Ilt73u3BYTOdQnAD3YkpDjL_sUbG9CYJHhZbfOsln/exec';
