@@ -43,15 +43,14 @@
     <thead>
       <tr>
         <th>Sensor</th>
-        <th>Timestamp</th>
+        <th>Último registro</th>
         <th>Estado</th>
-        <th>Fuente</th>
       </tr>
     </thead>
     <tbody id="sensorData">
     </tbody>
   </table>
-  <button onclick="fetchSensorData()">Recargar Página</button>
+  <button onclick="fetchSensorData()">Actualizar Datos</button>
 
   <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwBFTYrAGh0opskupEhCs8sKP4Ilt73u3BYTOdQnAD3YkpDjL_sUbG9CYJHhZbfOsln/exec';
@@ -65,19 +64,17 @@
 
         const sensor1Row = document.createElement('tr');
         sensor1Row.innerHTML = `
-          <td>Sensor 1</td>
+          <td>Pivote 1</td>
           <td>${data.sensor1.timestamp}</td>
           <td class="${data.sensor1.state === 'Lleno' ? 'lleno' : 'vacio'}">${data.sensor1.state}</td>
-          <td>${data.sensor1.source}</td>
         `;
         tableBody.appendChild(sensor1Row);
 
         const sensor2Row = document.createElement('tr');
         sensor2Row.innerHTML = `
-          <td>Sensor 2</td>
+          <td>Pivote 2</td>
           <td>${data.sensor2.timestamp}</td>
           <td class="${data.sensor2.state === 'Lleno' ? 'lleno' : 'vacio'}">${data.sensor2.state}</td>
-          <td>${data.sensor2.source}</td>
         `;
         tableBody.appendChild(sensor2Row);
       } catch (error) {
