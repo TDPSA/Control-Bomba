@@ -104,8 +104,7 @@
       }
     }
 
-    setInterval(fetchSensorData, 5000); // Actualizar cada 5 segundos
-    fetchSensorData(); // Llamar inmediatamente al cargar la página
+    document.querySelector('button').addEventListener('click', fetchSensorData);
   </script>
 </body>
 </html>
