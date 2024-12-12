@@ -20,6 +20,7 @@
     th, td {
       border: 1px solid #ddd;
       padding: 8px;
+      word-wrap: break-word;
     }
     th {
       background-color: #f2f2f2;
@@ -86,7 +87,7 @@
         sensor1Row.innerHTML = `
           <td>Pivote 1</td>
           <td>${data.sensor1.timestamp}</td>
-          <td class="${data.sensor1.state === 'VACIO' ? 'low' : 'full'}">${data.sensor1.state === 'VACIO' ? 'Bajo' : 'Lleno'}</td>
+          <td class="${data.sensor1.state === 'Vacío' ? 'low' : 'full'}">${data.sensor1.state === 'Vacío' ? 'Bajo' : 'Lleno'}</td>
         `;
         tableBody.appendChild(sensor1Row);
 
@@ -94,7 +95,7 @@
         sensor2Row.innerHTML = `
           <td>Pivote 2</td>
           <td>${data.sensor2.timestamp}</td>
-          <td class="${data.sensor2.state === 'VACIO' ? 'low' : 'full'}">${data.sensor2.state === 'VACIO' ? 'Bajo' : 'Lleno'}</td>
+          <td class="${data.sensor2.state === 'Vacío' ? 'low' : 'full'}">${data.sensor2.state === 'Vacío' ? 'Bajo' : 'Lleno'}</td>
         `;
         tableBody.appendChild(sensor2Row);
       } catch (error) {
