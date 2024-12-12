@@ -3,82 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nivel tanques de agua</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Favicon -->
+  <title>Estado de Sensores</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       margin-top: 50px;
-      padding: 0 10px;
     }
     table {
       margin: 0 auto;
       border-collapse: collapse;
-      width: 100%;
-      max-width: 600px;
+      width: 50%;
     }
     th, td {
       border: 1px solid #ddd;
       padding: 8px;
-      word-wrap: break-word;
     }
     th {
       background-color: #f2f2f2;
-    }
-    .lleno {
-      background-color: green;
-      color: white;
-    }
-    .bajo {
-      background-color: red;
-      color: white;
     }
     button {
       margin-top: 20px;
       padding: 10px 20px;
       font-size: 16px;
     }
-    .loader {
-      border: 16px solid #f3f3f3;
-      border-radius: 50%;
-      border-top: 16px solid #3498db;
-      width: 60px;
-      height: 60px;
-      animation: spin 2s linear infinite;
-      display: none;
-      margin: 20px auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    select {
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <img src="favicon.ico" alt="Logo" style="width: 100px; height: 100px;"> <!-- Logo inicial -->
-  <h1>Nivel tanques de agua</h1>
+  <h1>Estado de Sensores en Tiempo Real</h1>
   <table>
     <thead>
       <tr>
         <th>Sensor</th>
-        <th>Último registro</th>
-        <th>Nivel</th>
+        <th>Timestamp</th>
+        <th>Estado</th>
+        <th>Fuente</th>
       </tr>
     </thead>
     <tbody id="sensorData">
     </tbody>
   </table>
-  <button onclick="fetchSensorData()">Actualizar Datos</button>
-  <div class="loader" id="loader"></div> <!-- Círculo de carga -->
+  <button onclick="fetchSensorData()">Recargar Página</button>
+
+  <h2>Tiempo de Bombeo</h2>
+  <select id="daySelector" onchange="fetchBombeoData()">
+    <!-- Opciones de días se llenarán dinámicamente -->
+  </select>
+  <div id="bombeoData"></div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwBFTYrAGh0opskupEhCs8sKP4Ilt73u3BYTOdQnAD3YkpDjL_sUbG9CYJHhZbfOsln/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbytsnKG1e53FI3rAmBZlJRgIA8ok1w8uuBLTeOjqwoPQhH3wc0_HevBISPtisxFqng/exec'; // Reemplaza con la URL de tu script web
 
     async function fetchSensorData() {
-      const loader = document.getElementById('loader');
-      loader.style.display = 'block'; // Mostrar el círculo de carga
-
       try {
         const response = await fetch(scriptURL);
         const data = await response.json();
@@ -87,27 +68,58 @@
 
         const sensor1Row = document.createElement('tr');
         sensor1Row.innerHTML = `
-          <td>Pivote 1</td>
+          <td>Sensor 1</td>
           <td>${data.sensor1.timestamp}</td>
-          <td class="${data.sensor1.state === 'Lleno' ? 'lleno' : 'bajo'}">${data.sensor1.state === 'Lleno' ? 'Lleno' : 'Bajo'}</td>
+          <td>${data.sensor1.state}</td>
+          <td>${data.sensor1.source}</td>
         `;
         tableBody.appendChild(sensor1Row);
 
         const sensor2Row = document.createElement('tr');
         sensor2Row.innerHTML = `
-          <td>Pivote 2</td>
+          <td>Sensor 2</td>
           <td>${data.sensor2.timestamp}</td>
-          <td class="${data.sensor2.state === 'Lleno' ? 'lleno' : 'bajo'}">${data.sensor2.state === 'Lleno' ? 'Lleno' : 'Bajo'}</td>
+          <td>${data.sensor2.state}</td>
+          <td>${data.sensor2.source}</td>
         `;
         tableBody.appendChild(sensor2Row);
       } catch (error) {
         console.error('Error fetching sensor data:', error);
-      } finally {
-        loader.style.display = 'none'; // Ocultar el círculo de carga
       }
     }
 
+    async function fetchBombeoData() {
+      const selectedDay = document.getElementById('daySelector').value;
+      try {
+        const response = await fetch(`${scriptURL}?day=${selectedDay}`);
+        const data = await response.json();
+        const bombeoDataDiv = document.getElementById('bombeoData');
+        bombeoDataDiv.innerHTML = `Tiempo de bombeo para el día ${selectedDay}: ${data.bombeoTime} horas`;
+      } catch (error) {
+        console.error('Error fetching bombeo data:', error);
+      }
+    }
+
+    async function populateDaySelector() {
+      try {
+        const response = await fetch(`${scriptURL}?action=getDays`);
+        const days = await response.json();
+        const daySelector = document.getElementById('daySelector');
+        daySelector.innerHTML = '';
+        days.forEach(day => {
+          const option = document.createElement('option');
+          option.value = day;
+          option.textContent = day;
+          daySelector.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error fetching days:', error);
+      }
+    }
+
+    setInterval(fetchSensorData, 5000); // Actualizar cada 5 segundos
     fetchSensorData(); // Llamar inmediatamente al cargar la página
+    populateDaySelector(); // Llenar el menú desplegable al cargar la página
   </script>
 </body>
 </html>
