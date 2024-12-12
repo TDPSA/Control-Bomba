@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estado de Sensores</title>
+  <title>Nivel tanque de agua</title>
+  <link rel="icon" href="favicon.ico">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -27,17 +28,32 @@
       padding: 10px 20px;
       font-size: 16px;
     }
-    .lleno {
-      background-color: green;
+    .loading-circle {
+      display: none;
+      margin: 20px auto;
+      border: 8px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 8px solid #3498db;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .low {
+      background-color: red;
       color: white;
     }
-    .vacio {
-      background-color: red;
+    .full {
+      background-color: green;
       color: white;
     }
   </style>
 </head>
 <body>
+  <img src="favicon.ico" alt="Logo" style="width: 50px; height: 50px;">
   <h1>Estado de Sensores en Tiempo Real</h1>
   <table>
     <thead>
@@ -50,18 +66,15 @@
     <tbody id="sensorData">
     </tbody>
   </table>
-  <button onclick="fetchSensorData()">Recargar Página</button>
-
-  <h2>Tiempo de Bombeo</h2>
-  <select id="daySelector" onchange="fetchBombeoData()">
-    <!-- Opciones de días se llenarán dinámicamente -->
-  </select>
-  <div id="bombeoData"></div>
+  <button onclick="fetchSensorData()">Actualizar datos</button>
+  <div class="loading-circle" id="loadingCircle"></div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwj9-jBLuG3UekVDkTNGBqCEfMov7P5StFzCV8mZKRKRjtcxnqM47yM1wvlJwwZD6mi/exec'; // Reemplaza con la URL de tu script
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwBFTYrAGh0opskupEhCs8sKP4Ilt73u3BYTOdQnAD3YkpDjL_sUbG9CYJHhZbfOsln/exec'; // Reemplaza con la URL de tu script web
 
     async function fetchSensorData() {
+      const loadingCircle = document.getElementById('loadingCircle');
+      loadingCircle.style.display = 'block';
       try {
         const response = await fetch(scriptURL);
         const data = await response.json();
@@ -70,56 +83,28 @@
 
         const sensor1Row = document.createElement('tr');
         sensor1Row.innerHTML = `
-          <td>Sensor 1</td>
+          <td>Pivote 1</td>
           <td>${data.sensor1.timestamp}</td>
-          <td class="${data.sensor1.state === 'Lleno' ? 'lleno' : 'vacio'}">${data.sensor1.state === 'Lleno' ? 'Lleno' : 'Bajo'}</td>
+          <td class="${data.sensor1.state === 'VACIO' ? 'low' : 'full'}">${data.sensor1.state === 'VACIO' ? 'Bajo' : 'Lleno'}</td>
         `;
         tableBody.appendChild(sensor1Row);
 
         const sensor2Row = document.createElement('tr');
         sensor2Row.innerHTML = `
-          <td>Sensor 2</td>
+          <td>Pivote 2</td>
           <td>${data.sensor2.timestamp}</td>
-          <td class="${data.sensor2.state === 'Lleno' ? 'lleno' : 'vacio'}">${data.sensor2.state === 'Lleno' ? 'Lleno' : 'Bajo'}</td>
+          <td class="${data.sensor2.state === 'VACIO' ? 'low' : 'full'}">${data.sensor2.state === 'VACIO' ? 'Bajo' : 'Lleno'}</td>
         `;
         tableBody.appendChild(sensor2Row);
       } catch (error) {
         console.error('Error fetching sensor data:', error);
-      }
-    }
-
-    async function fetchBombeoData() {
-      const selectedDay = document.getElementById('daySelector').value;
-      try {
-        const response = await fetch(`${scriptURL}?day=${selectedDay}`);
-        const data = await response.json();
-        const bombeoDataDiv = document.getElementById('bombeoData');
-        bombeoDataDiv.innerHTML = `Tiempo de bombeo para el día ${selectedDay}: ${data.bombeoTime} horas`;
-      } catch (error) {
-        console.error('Error fetching bombeo data:', error);
-      }
-    }
-
-    async function populateDaySelector() {
-      try {
-        const response = await fetch(`${scriptURL}?action=getDays`);
-        const days = await response.json();
-        const daySelector = document.getElementById('daySelector');
-        daySelector.innerHTML = '';
-        days.forEach(day => {
-          const option = document.createElement('option');
-          option.value = day;
-          option.textContent = day;
-          daySelector.appendChild(option);
-        });
-      } catch (error) {
-        console.error('Error fetching days:', error);
+      } finally {
+        loadingCircle.style.display = 'none';
       }
     }
 
     setInterval(fetchSensorData, 5000); // Actualizar cada 5 segundos
     fetchSensorData(); // Llamar inmediatamente al cargar la página
-    populateDaySelector(); // Llenar el menú desplegable al cargar la página
   </script>
 </body>
 </html>
