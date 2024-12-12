@@ -96,7 +96,7 @@
         const sensor1Row = document.createElement('tr');
         sensor1Row.innerHTML = `
           <td>Pivote 1</td>
-          <td>${formatDate(data.sensor1.timestamp)}</td>
+          <td>${formatDate(new Date(data.sensor1.timestamp))}</td>
           <td class="${data.sensor1.state === 'Vacío' ? 'low' : 'full'}">${data.sensor1.state === 'Vacío' ? 'Bajo' : 'Lleno'}</td>
         `;
         tableBody.appendChild(sensor1Row);
@@ -104,7 +104,7 @@
         const sensor2Row = document.createElement('tr');
         sensor2Row.innerHTML = `
           <td>Pivote 2</td>
-          <td>${formatDate(data.sensor2.timestamp)}</td>
+          <td>${formatDate(new Date(data.sensor2.timestamp))}</td>
           <td class="${data.sensor2.state === 'Vacío' ? 'low' : 'full'}">${data.sensor2.state === 'Vacío' ? 'Bajo' : 'Lleno'}</td>
         `;
         tableBody.appendChild(sensor2Row);
