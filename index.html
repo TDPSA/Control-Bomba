@@ -27,10 +27,13 @@
       padding: 10px 20px;
       font-size: 16px;
     }
-    select {
-      margin-top: 20px;
-      padding: 10px;
-      font-size: 16px;
+    .lleno {
+      background-color: green;
+      color: white;
+    }
+    .vacio {
+      background-color: red;
+      color: white;
     }
   </style>
 </head>
@@ -40,9 +43,8 @@
     <thead>
       <tr>
         <th>Sensor</th>
-        <th>Timestamp</th>
+        <th>Último registro</th>
         <th>Estado</th>
-        <th>Fuente</th>
       </tr>
     </thead>
     <tbody id="sensorData">
@@ -57,7 +59,7 @@
   <div id="bombeoData"></div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbytsnKG1e53FI3rAmBZlJRgIA8ok1w8uuBLTeOjqwoPQhH3wc0_HevBISPtisxFqng/exec'; // Reemplaza con la URL de tu script web
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxQ3zQiaoYB8bczHwnnILnzbBLmBwxjoK8X7lVV0fqCE3Y-t3kY9Tr9Zn6Wh2a3WtKU/exec'; // Reemplaza con la URL de tu script
 
     async function fetchSensorData() {
       try {
@@ -70,8 +72,7 @@
         sensor1Row.innerHTML = `
           <td>Sensor 1</td>
           <td>${data.sensor1.timestamp}</td>
-          <td>${data.sensor1.state}</td>
-          <td>${data.sensor1.source}</td>
+          <td class="${data.sensor1.state === 'Lleno' ? 'lleno' : 'vacio'}">${data.sensor1.state === 'Lleno' ? 'Lleno' : 'Bajo'}</td>
         `;
         tableBody.appendChild(sensor1Row);
 
@@ -79,8 +80,7 @@
         sensor2Row.innerHTML = `
           <td>Sensor 2</td>
           <td>${data.sensor2.timestamp}</td>
-          <td>${data.sensor2.state}</td>
-          <td>${data.sensor2.source}</td>
+          <td class="${data.sensor2.state === 'Lleno' ? 'lleno' : 'vacio'}">${data.sensor2.state === 'Lleno' ? 'Lleno' : 'Bajo'}</td>
         `;
         tableBody.appendChild(sensor2Row);
       } catch (error) {
