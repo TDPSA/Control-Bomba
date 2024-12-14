@@ -60,6 +60,17 @@
       height: 70px;
       margin-bottom: 20px;
     }
+    .pump-status {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .pump-status .on {
+      color: green;
+    }
+    .pump-status .off {
+      color: black;
+    }
     @media (max-width: 600px) {
       th, td {
         padding: 4px;
@@ -85,6 +96,7 @@
     <tbody id="sensorData">
     </tbody>
   </table>
+  <div class="pump-status" id="pumpStatus"></div>
   <button onclick="fetchSensorData()">Actualizar datos</button>
   <div class="loading-circle" id="loadingCircle"></div>
 
@@ -93,6 +105,7 @@
 
     async function fetchSensorData() {
       const loadingCircle = document.getElementById('loadingCircle');
+      const pumpStatus = document.getElementById('pumpStatus');
       loadingCircle.style.display = 'block';
       try {
         const response = await fetch(scriptURL);
@@ -120,6 +133,12 @@
           <td class="${data.sensor2.state === 'Vacío' ? 'low' : 'full'}">${data.sensor2.state === 'Vacío' ? 'Bajo' : 'Lleno'}</td>
         `;
         tableBody.appendChild(sensor2Row);
+
+        if (data.sensor1.state === 'Vacío' || data.sensor2.state === 'Vacío') {
+          pumpStatus.innerHTML = 'Bomba: <span class="on">encendida</span>';
+        } else {
+          pumpStatus.innerHTML = 'Bomba: <span class="off">apagada</span>';
+        }
       } catch (error) {
         console.error('Error fetching sensor data:', error);
       } finally {
